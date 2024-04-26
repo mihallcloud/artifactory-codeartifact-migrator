@@ -79,6 +79,40 @@ def artifactory_http_call(args, api_path):
     logger.critical(f"Failure connecting to {uri} : {str(response)}")
     sys.exit(1)
 
+
+# Make an API Call to Artifactory and return json
+def artifactory_http_post_call(args, api_path):
+  """
+  artifactory_http_call makes an API Call to Artifactory.
+
+  :param args: arguments passed to cli command
+  :param api_path: api path to add to url call
+  :return: json data of the http response text
+  """
+  artifactory_auth = (args.artifactoryuser, args.artifactorypass)
+  session = requests.session()
+  session.auth = (
+    artifactory_auth
+  )
+  session.mount("http://", TimeoutHTTPAdapter(max_retries=retry_strategy))
+  session.mount("https://", TimeoutHTTPAdapter(max_retries=retry_strategy))
+  if args.artifactoryprefix:
+    prefix = f"/{args.artifactoryprefix}"
+  else:
+    prefix = ""
+  uri = f"{args.artifactoryprotocol}://{args.artifactoryhost}{prefix}{api_path}"
+
+  response = session.post(
+      uri
+  )
+
+  if response.status_code in range(200, 300):
+    return json.loads(response.text)
+  else:
+    logger.critical(f"Failure connecting to {uri} : {str(response)}")
+    sys.exit(1)
+
+
 def artifactory_package_search(args, package, repository):
   """
   artifactory_package_search searches Artifactory to verify a package exists.
