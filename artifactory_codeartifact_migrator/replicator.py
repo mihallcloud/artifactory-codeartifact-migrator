@@ -135,6 +135,7 @@ def get_artifactory_package_versions(binaries, package_dict):
     if package_dict['type'] in ['pypi', 'maven']:
       if '.pom' in uri or \
                 '.jar' in uri or \
+                '.zip' in uri or \
                 '.tar.gz' in uri or \
                 '.whl' in uri or \
                 '.egg' in uri:
@@ -685,8 +686,8 @@ def replicate(args):
   logger.debug(f"Codeartifact repo list:\n{codeartifact_repos}")
 
   # Update the repos list
-  jsondata_update = artifactory.artifactory_http_post_call(args, '/api/storageinfo/calculate')
-  logger.debug('Artifactory repo refresh:{}'.format(jsondata_update))
+  # jsondata_update = artifactory.artifactory_http_post_call(args, '/api/storageinfo/calculate')
+  # logger.debug('Artifactory repo refresh:{}'.format(jsondata_update))
   # Then we check Artifactory access
   jsondata = artifactory.artifactory_http_call(args, '/api/storageinfo')
   artifactory_repos = jsondata['repositoriesSummaryList']

@@ -153,6 +153,7 @@ def artifactory_package_binary_search(args, package_dict):
           if '/' + package_dict.get('version') + '/' in i['uri']:
             # Avoid files that aren't standard binaries
             ## ToDo: This should just be a regex search with $ end
+            logger.info(f"Binary file is: {i}")
             if '.tar.gz' in i['uri'] or \
               '.whl' in i['uri'] or \
               '.egg' in i['uri']:
@@ -176,6 +177,7 @@ def artifactory_package_binary_search(args, package_dict):
                 ## ToDo: This should just be a regex search with $ end
                 if '.pom' in i['uri'] or \
                   '.jar' in i['uri'] or \
+                  '.zip' in i['uri'] or \
                   '.tar.gz' in i['uri']:
                   binaries.append(i['uri'])
           else:
