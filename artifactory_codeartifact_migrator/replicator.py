@@ -69,6 +69,7 @@ def get_package_type(repository, artifactory_repos):
     sys.exit(1)  
   if repo_to_check.get('packageType'):
     if repo_to_check['repoType'] == "LOCAL":
+      logger.info(f"Repo_to_check is: {str(repo_to_check)}")
       return repo_to_check['packageType'].lower()
   else:
     logger.critical(f"Repo missing packageType key:\n{str(repo_to_check)}")
@@ -711,11 +712,12 @@ def replicate(args):
   elif args.repositories:
     logger.info('Specific repository replication specified')
     check_artifactory_repos(args.repositories, artifactory_repos)
+    logger.info (f"args.repositories is: {args.repositories}")
     for repository in args.repositories.split(" "):
       if args.refresh:
         logger.info(f"Refreshing all packages in {repository}")
         caching.reset_fetched_packages(args, repository, db_file)
-        package_type = get_package_type(repository, artifactory_repos)
+      package_type = get_package_type(repository, artifactory_repos)
       replicate_repository(args, client, repository, package_type, codeartifact_repos, db_file)
   else:
     logger.info('All repository replication specified')
